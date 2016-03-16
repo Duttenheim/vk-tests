@@ -1,5 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
+
+struct Window;
 struct VkContext
 {
 	static VkDevice dev;
@@ -32,6 +34,7 @@ struct VkContext
 	const uint32_t VkPoolSetSize = 64;
 
 	VkPhysicalDevice devices[64];
+	VkImage* backbuffers;
 
 	VkExtensionProperties physicalExtensions[64];
 
@@ -55,5 +58,11 @@ struct VkContext
 	VkSwapchainKHR swapchain;
 
 	/// setup context
-	void CreateVulkanContext();
+	void CreateVulkanContext(Window& wnd);
+	/// allocate buffer memory
+	void AllocateBufferMemory(const VkBuffer& buf, VkDeviceMemory& mem, VkMemoryPropertyFlagBits flags, uint32_t& size);
+	/// allocate image memory
+	void AllocateImageMemory(const VkImage& buf, VkDeviceMemory& mem, VkMemoryPropertyFlagBits flags, uint32_t& size);
+	/// get memory type by walking through memory types and get an appropriate one
+	VkResult GetMemoryType(uint32_t bits, VkMemoryPropertyFlags flags, uint32_t& index);
 };
